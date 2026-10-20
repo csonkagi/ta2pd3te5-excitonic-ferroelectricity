@@ -1,0 +1,31 @@
+H0: nw=16, nR=145, mesh=[36, 8], nocc=12, gap at fixed filling 107.5 meV
+Bonds: 16 Ta-X bonds within 3.4 A  (32 real order-parameter components)
+
+Symmetry test of H0 (geometric operators from WF centres):
+    E: centre mismatch  0.000 A   residual      0.0 meV   EXACT
+  C2x: centre mismatch  0.000 A   residual      3.5 meV   EXACT
+  C2y: centre mismatch  1.502 A   residual    516.6 meV   broken
+  C2z: centre mismatch  1.502 A   residual    516.4 meV   broken
+    I: centre mismatch  1.502 A   residual    516.4 meV   broken
+   sx: centre mismatch  1.502 A   residual    516.4 meV   broken
+   sy: centre mismatch  0.000 A   residual      3.3 meV   EXACT
+   sz: centre mismatch  0.000 A   residual      1.9 meV   EXACT
+
+Exact group of H0: {E, C2x, sy, sz} (order 4)
+  D2h irreps are NOT separable in this basis. Merged channels:
+    Ag + B3u
+    B1g + B2u
+    B2g + B1u
+    B3g + Au
+
+=== channel Ag+B3u: dim 8, lambda_max(chi) = 0.6419 1/eV  ->  V0c = 1.558 eV
+    V0= 0.50  |Delta|=    0.003 meV   F-E_n=   +0.0000 meV
+    V0= 1.00  |Delta|=    0.006 meV   F-E_n=   +0.0000 meV
+    V0= 1.50  |Delta|=    0.096 meV   F-E_n=   +0.0000 meV
+
+=== channel B3g+Au: dim 8, lambda_max(chi) = 0.7047 1/eV  ->  V0c = 1.419 eV
+    V0= 0.50  |Delta|=    0.002 meV   F-E_n=   +0.0000 meV
+    V0= 1.00  |Delta|=    0.006 meV   F-E_n=   +0.0000 meV
+    V0= 1.50  no seed converged
+
+Wrote channel_mf_v6.csv   elapsed 36.0 s

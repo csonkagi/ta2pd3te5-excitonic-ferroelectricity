@@ -1,0 +1,8 @@
+operation,type,residual_meV,exact
+C2x,2_1x screw,3.5,True
+C2y,2_1y screw,516.6,False
+C2z,C2z rotation,516.4,False
+I,inversion,516.4,False
+sx,sigma_x mirror,516.4,False
+sy,sigma_y mirror,3.3,True
+sz,n_z glide,1.9,True
