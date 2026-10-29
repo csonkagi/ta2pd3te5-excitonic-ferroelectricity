@@ -6,6 +6,8 @@ python code/compute_results.py
 python code/combine_fig1.py
 python code/combine_fig2.py
 python code/make_fig3_fig4.py
+python code/make_fig4.py
+python code/make_fig4_interactive.py
 python code/make_fig5.py
 python code/build_figS1.py
 echo "Done: results/ and figures/ are up to date."

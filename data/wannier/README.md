@@ -9,3 +9,5 @@
 To add (author): the full `wannier90.wout` and, optionally, `wannier90_band.dat`, `.kpt`, `.gnu`, `.agr`.
 
 Do not use `wannier90_hr_B3u.dat` from earlier work: it was produced by a superseded script with an incorrect energy functional.
+
+Note: the frozen window ends at −2.4 eV, 27 meV below the valence-band maximum (−2.373 eV), so the band-edge states v₁, c₁ and c₂ are fixed by the disentanglement rather than frozen.

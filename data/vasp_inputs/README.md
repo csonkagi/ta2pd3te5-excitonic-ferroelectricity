@@ -6,7 +6,7 @@ To add (author), one folder per calculation, each with INCAR, KPOINTS and POSCAR
 | --- | --- |
 | `bulk_scf/` | Bulk r²SCAN+rVV10, Γ-centred 7×28×5 mesh |
 | `monolayer_relax/` | Monolayer relaxation, r²SCAN+rVV10 |
-| `monolayer_wannier/` | Self-consistent run on the full 28×5×1 mesh (ISYM = −1, LWANNIER90 = .TRUE., NBANDS = 134) |
+| `monolayer_wannier/` | Self-consistent run on the full 28×5×1 mesh (ISYM = −1, LWANNIER90 = .TRUE., NBANDS = 144; Wannier90 uses num_bands = 134 after exclude_bands = 1-10) |
 | `bulk_bands_arpes/` | Bulk bands along Y–Γ–Y for Fig. S1 |
 
 Common settings: METAGGA = R2SCAN, LUSE_VDW = .TRUE., BPARAM = 11.95, CPARAM = 0.0093, LASPH = .TRUE., ENCUT = 600 eV.

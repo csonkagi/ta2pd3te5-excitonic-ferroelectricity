@@ -4,6 +4,7 @@
 Writes to results/:
   symmetry_residuals.csv      Table III  (r_g for the seven nontrivial Pmmn operations)
   gamma_eigenvalues.csv       Table I, right-hand columns (v1, c1, c2 under the exact operations)
+  interband_dipoles_gamma.csv Fig. 3(b) at Gamma (|<c|v_x|v1>|^2, |<c|v_y|v1>|^2 for c1 and c2)
   wannier_centres.csv         Fig. 4 and Sec. III.E (centre, seed, offset, spread, distance to sigma_x planes)
   v0c_merged_channels.csv     Fig. 5  (critical couplings for r_c = 3.4, 4.0, 4.6 A)
 Usage: python code/compute_results.py   (from the repository root; about 5 min on a laptop)
@@ -41,6 +42,13 @@ def main():
         w = csv.writer(f); w.writerow(["state", "E_minus_EVBM_meV", "2_1x", "sigma_y", "n_z"])
         for k, lab in [(11, "v1"), (12, "c1"), (13, "c2")]:
             w.writerow([lab, round((e[k]-e[11])*1e3, 1)] + [round(float(np.vdot(V[:, k], U(n) @ V[:, k]).real), 6) for n in ("C2x", "sy", "sz")])
+    # --- Fig. 3(b) at Gamma: interband velocity matrix elements, v = dH/dk (tight-binding approximation)
+    Rc = Rvec[:, :2]*L[:2]
+    vx = np.einsum("r,rmn->mn", 1j*Rc[:, 0]/degen, HRm); vy = np.einsum("r,rmn->mn", 1j*Rc[:, 1]/degen, HRm)
+    with open(OUT/"interband_dipoles_gamma.csv", "w", newline="") as f:
+        w = csv.writer(f); w.writerow(["pair", "abs_vx_sq_eV2A2", "abs_vy_sq_eV2A2"])
+        for c_, lab in [(12, "c1-v1 (Au)"), (13, "c2-v1 (B3u)")]:
+            w.writerow([lab, round(abs(V[:, c_].conj() @ vx @ V[:, 11])**2, 5), round(abs(V[:, c_].conj() @ vy @ V[:, 11])**2, 5)])
     # --- Wannier centres vs projection seeds
     txt = WIN.read_text(); blk = re.search(r"begin atoms_cart(.*?)end atoms_cart", txt, re.S | re.I).group(1)
     atoms = [(l.split()[0], np.array(l.split()[1:4], float)) for l in blk.strip().splitlines()]
@@ -53,7 +61,7 @@ def main():
             d = C[i]-seeds[i]; d -= np.round(d/L)*L
             xm = np.mod(C[i][0], L[0]); dpl = min(abs(xm), abs(xm-L[0]/2), abs(xm-L[0]))
             w.writerow([i+1, ORBS[i]] + list(np.round(C[i], 4)) + [spreads[i], round(spreads[i]**0.5, 2), round(float(np.linalg.norm(d)), 3), round(dpl, 3)])
-    print("wrote symmetry_residuals.csv, gamma_eigenvalues.csv, wannier_centres.csv")
+    print("wrote symmetry_residuals.csv, gamma_eigenvalues.csv, interband_dipoles_gamma.csv, wannier_centres.csv")
     if a.skip_v0c: return
     # --- Fig. 5: critical couplings of the merged channels
     out = []

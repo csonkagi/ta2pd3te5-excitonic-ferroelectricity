@@ -4,8 +4,16 @@ title: "Data and code for: When can an excitonic insulator be a purely electroni
 authors:
   - family-names: Csonka
     given-names: Gábor I.
+    affiliation: "Department of Physics and Engineering Physics, Tulane University"
+    orcid: "https://orcid.org/0000-0001-5701-4401"
+  - family-names: Tang
+    given-names: Hong
+    affiliation: "Department of Physics and Engineering Physics, Tulane University"
+  - family-names: Ruzsinszky
+    given-names: Adrienn
+    affiliation: "Department of Physics and Engineering Physics, Tulane University"
 version: 1.0.0
-date-released: 2026-10-19
+date-released: 2026-10-21
 license: MIT
-repository-code: "https://github.com/OWNER/ta2pd3te5-excitonic-ferroelectricity"
+repository-code: "https://github.com/csonkagi/Ta2Pd3Te5-excitonic-ferroelectricity"
 keywords: [excitonic insulator, electronic ferroelectricity, Ta2Pd3Te5, Wannier functions, symmetry analysis]
