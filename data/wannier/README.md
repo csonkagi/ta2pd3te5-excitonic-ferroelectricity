@@ -1,4 +1,4 @@
-# Wannier90 data (monolayer, r²SCAN+rVV10)
+# Wannier90 data (monolayer, r²SCAN)
 
 | File | Description |
 | --- | --- |

@@ -1,8 +1,8 @@
-operation,type,residual_meV,exact
-C2x,2_1x screw,3.5,True
-C2y,2_1y screw,516.6,False
-C2z,C2z rotation,516.4,False
-I,inversion,516.4,False
-sx,sigma_x mirror,516.4,False
-sy,sigma_y mirror,3.3,True
-sz,n_z glide,1.9,True
+operation,type,residual_meV,exact,k_independent_bound_meV
+C2x,2_1x screw,4.4,True,37.1
+C2y,2_1y screw,530.5,False,nan
+C2z,C2z rotation,530.5,False,nan
+I,inversion,530.5,False,nan
+sx,sigma_x mirror,530.6,False,nan
+sy,sigma_y mirror,3.5,True,22.7
+sz,n_z glide,3.9,True,28.6

@@ -84,16 +84,36 @@ def orbital_map(op, C, L, orbs):
     s = np.array([PARITY[orbs[i]](Rd) for i in range(len(C))], float)
     return p, np.array(T), s, err
 
-def op_residual(op, omap, Rvec, HR, degen, nk=6):
-    Rd = op[0]; p, T, s, _ = omap; nw = len(p); res = 0.0
-    for k in np.random.default_rng(0).random((nk, 2)):
-        gk = k * Rd[:2]
-        Hk = np.einsum("r,rmn->mn", np.exp(2j * np.pi * Rvec[:, :2] @ k) / degen, HR)
-        Hg = np.einsum("r,rmn->mn", np.exp(2j * np.pi * Rvec[:, :2] @ gk) / degen, HR)
-        U = np.zeros((nw, nw), complex)
-        for i in range(nw): U[p[i], i] = s[i] * np.exp(-2j * np.pi * gk @ T[i][:2])
-        res = max(res, np.abs(U @ Hk @ U.conj().T - Hg).max())
-    return res
+def residual_matrix(op, omap, Rvec, HR, degen, k):
+    """Delta_g(k) = U_g(k) H0(k) U_g(k)^dagger - H0(gk) for one reduced k (2D)."""
+    Rd = op[0]; p, T, s, _ = omap; nw = len(p); gk = k * Rd[:2]
+    Hk = np.einsum("r,rmn->mn", np.exp(2j * np.pi * Rvec[:, :2] @ k) / degen, HR)
+    Hg = np.einsum("r,rmn->mn", np.exp(2j * np.pi * Rvec[:, :2] @ gk) / degen, HR)
+    U = np.zeros((nw, nw), complex)
+    for i in range(nw): U[p[i], i] = s[i] * np.exp(-2j * np.pi * gk @ T[i][:2])
+    return U @ Hk @ U.conj().T - Hg
+
+def residual_kpoints(mesh=(36, 8), npath=101, nrandom=6):
+    """k points of the residual test: the uniform mesh, the X-Gamma-Y path and six random points."""
+    ks = [np.array([i / mesh[0], j / mesh[1]]) for i in range(mesh[0]) for j in range(mesh[1])]
+    ks += [np.array([0.5 * (1 - t), 0.0]) for t in np.linspace(0, 1, npath)]
+    ks += [np.array([0.0, 0.5 * t]) for t in np.linspace(0, 1, npath)]
+    ks += list(np.random.default_rng(0).random((nrandom, 2)))
+    return ks
+
+def op_residual(op, omap, Rvec, HR, degen, ks=None):
+    """r_g = max over the test k points of max |Delta_g(k)| (eV)."""
+    ks = residual_kpoints() if ks is None else ks
+    return max(np.abs(residual_matrix(op, omap, Rvec, HR, degen, k)).max() for k in ks)
+
+def op_residual_bound(op, omap, Rvec, HR, degen):
+    """k-independent bound sum_R max|Delta_g(R)| (eV); Delta_g(R) are the exact lattice Fourier
+    coefficients of the residual matrix, from an FFT on a grid larger than their range."""
+    n = 2 * (int(np.abs(Rvec[:, :2]).max()) + 3) + 4
+    D = np.array([[residual_matrix(op, omap, Rvec, HR, degen, np.array([i / n, j / n])) for j in range(n)]
+                  for i in range(n)])
+    DR = np.fft.fft2(D, axes=(0, 1)) / n**2
+    return np.abs(DR).max(axis=(2, 3)).sum()
 
 # ------------------------------------------------------------------ bonds
 def build_bonds(C, L, cb, vb, rcut, nmax=3):
@@ -191,6 +211,8 @@ def main():
     ap.add_argument("--seeds", type=int, default=2); ap.add_argument("--amp", type=float, default=0.05)
     ap.add_argument("--alpha", type=float, default=0.3); ap.add_argument("--tol", type=float, default=1e-6)
     ap.add_argument("--maxit", type=int, default=500); ap.add_argument("--out", default="channel_mf_v6.csv")
+    ap.add_argument("--channels", choices=["all", "odd"], default="all",
+                    help="all: every channel the exact group separates; odd: only channels containing Au or B3u")
     a = ap.parse_args(); t0 = time.time()
 
     m = Model(a)
@@ -219,7 +241,7 @@ def main():
     chi = m.chi_prim(); rows = []; rng = np.random.default_rng(7)
     for key, irs in classes.items():
         label = "+".join(irs)
-        if not any(x in irs for x in ("Au", "B3u")): continue
+        if a.channels == "odd" and not any(x in irs for x in ("Au", "B3u")): continue
         P = sum(c * D for c, (_, D) in zip(key, exact)) / len(exact)
         U, sv, _ = np.linalg.svd(P); Q = U[:, sv > 0.5]
         lam = np.linalg.eigvalsh(Q.T @ chi @ Q).max(); V0c = 1 / lam

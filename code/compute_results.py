@@ -28,8 +28,10 @@ def main():
     rows, maps = [], {}
     for n in v6.OPNAMES[1:]:
         om = v6.orbital_map(ops[n], C, L, ORBS); maps[n] = om
-        r = v6.op_residual(ops[n], om, Rvec, HRm, degen) * 1e3
-        rows.append(dict(operation=n, type=NAMES[n], residual_meV=round(r, 1), exact=r < 20))
+        r = v6.op_residual(ops[n], om, Rvec, HRm, degen) * 1e3        # 36x8 mesh, X-Gamma-Y path, 6 random k
+        bound = v6.op_residual_bound(ops[n], om, Rvec, HRm, degen) * 1e3 if r < 20 else float("nan")
+        rows.append(dict(operation=n, type=NAMES[n], residual_meV=round(r, 1), exact=r < 20,
+                         k_independent_bound_meV=round(bound, 1)))
     with open(OUT/"symmetry_residuals.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
     # --- Table I, right-hand columns
@@ -79,10 +81,10 @@ def main():
         for ir, ch in v6.CHAR.items():
             classes.setdefault(tuple(ch[v6.OPNAMES.index(n)] for n in names), []).append(ir)
         for key, irs in classes.items():
-            if not any(x in irs for x in ("Au", "B3u")): continue
+            pass  # all channels the exact group separates (Fig. 5 shows all four merged channels)
             P = sum(c*D for c, (_, D) in zip(key, exact))/len(exact); Uu, sv, _ = np.linalg.svd(P); Q = Uu[:, sv > 0.5]
             lam = np.linalg.eigvalsh(Q.T @ chi @ Q).max()
-            out.append(dict(r_c_A=rc, n_bonds=len(m.bonds), channel="+".join(irs), lambda_max_per_eV=round(lam, 4), V0c_eV=round(1/lam, 3)))
+            out.append(dict(r_c_A=rc, n_bonds=len(m.bonds), channel="+".join(irs), lambda_max_per_eV=round(lam, 4), V0c_eV=round(1/lam, 4)))
             print(out[-1])
     with open(OUT/"v0c_merged_channels.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(out[0])); w.writeheader(); w.writerows(out)
