@@ -1,14 +1,14 @@
 # VASP inputs
 
-To add (author), one folder per calculation, each with INCAR, KPOINTS and POSCAR:
+Monolayer calculations of Hong Tang (VASP, PAW, r²SCAN without dispersion correction, ENCUT = 550 eV), one folder per calculation:
 
-| Folder | Calculation |
-| --- | --- |
-| `bulk_scf/` | Bulk r²SCAN+rVV10, Γ-centred 7×28×5 mesh |
-| `monolayer_relax/` | Monolayer relaxation, r²SCAN (no dispersion correction) |
-| `monolayer_wannier/` | Wannier step on the full 28×5×1 mesh (LWANNIER90 = .TRUE., NBANDS = 144; Wannier90 uses num_bands = 134 after exclude_bands = 1-10); the self-consistent step ran with symmetry (45 irreducible k-points) |
-| `bulk_bands_arpes/` | Bulk bands along Y–Γ–Y for Fig. S1 |
+| Folder | Calculation | Files in the repository |
+| --- | --- | --- |
+| `monolayer_relax/` | relaxation of the monolayer | `INCAR`, `KPOINTS`, `POSCAR`, `CONTCAR_1L_r2scan_relaxed` |
+| `monolayer_wannier/` | self-consistent step (`INCAR_SCF`, symmetry-reduced: 45 irreducible k-points) and Wannier step (`INCAR_WAN`, full 28×5×1 mesh, LWANNIER90 = .TRUE., NBANDS = 144; Wannier90 uses num_bands = 134 after exclude_bands = 1-10) | `INCAR_SCF`, `INCAR_WAN`, `INCAR` (identical to `INCAR_WAN`), `KPOINTS`, `POSCAR` |
+| `monolayer_bandstr/` | DFT band structure along the high-symmetry path | `KPOINTS` (band path); its `INCAR` and `POSCAR` are not available |
+| `bulk_scf/` | bulk r²SCAN+rVV10 calculations for Fig. S1 (ENCUT = 550 eV) | not yet available |
 
-Common settings: METAGGA = R2SCAN, LASPH = .TRUE.; monolayer runs ENCUT = 550 eV. Bulk runs add the rVV10 correction: LUSE_VDW = .TRUE., BPARAM = 11.95, CPARAM = 0.0093.
+Common settings: METAGGA = R2SCAN, LASPH = .TRUE., ENCUT = 550 eV. Bulk runs add the rVV10 correction: LUSE_VDW = .TRUE., BPARAM = 11.95, CPARAM = 0.0093.
 
-POTCAR files are licensed by VASP Software GmbH and must not be redistributed. List here the PAW datasets used (for example `PAW_PBE Ta_pv`, `PAW_PBE Pd`, `PAW_PBE Te`), with their dates as they appear in the POTCAR TITEL lines.
+Not published: `OUTCAR`, `vasprun.xml`, `WAVECAR` and other output files (see `.gitignore`), and the `POTCAR` files, which are licensed by VASP Software GmbH and must not be redistributed. PAW datasets used (POTCAR TITEL lines): to be added.

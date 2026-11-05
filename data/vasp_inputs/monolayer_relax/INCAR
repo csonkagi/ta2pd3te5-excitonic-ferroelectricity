@@ -1,0 +1,76 @@
+SYSTEM = step1 CHGCAR_calculation
+ISTART=0   !0
+ICHARG=2   !2
+PREC=Accurate
+
+ENCUT=550
+ISMEAR=1
+SIGMA=0.1
+AMIX_MAG=0.8
+EDIFF=8E-07
+EDIFFG= -0.003
+
+
+! ISPIN=2
+! ISYM= -1
+! LSORBIT=.True. 
+! LMIXTAU=.True. 
+
+
+NCORE=8
+KPAR = 4
+ISIF=3
+IBRION=2  ! #Ions are not moving
+NSW=400   !  ## no of ionic steps if we set NSW =0, it ignores ISIF
+NELM = 500
+
+
+AMIX = 0.1
+BMIX = 0.001
+
+AMIN= 0.01
+! LREAL= Auto
+
+IALGO=38
+
+! ALGO= All
+
+
+
+! ####
+
+LMAXMIX=4  ! #NEEDED FOR PAW
+
+!  ##semilocal DFT calculations
+
+! GGA=PE
+
+
+ADDGRID  =  .TRUE.
+METAGGA   = R2SCAN
+! LUSE_VDW  = .TRUE.
+! BPARAM    = 11.95 !  # the default value is 6.3
+! CPARAM    = 0.0093 ! # default but can be overwritten by this tag
+LASPH     = .TRUE.
+
+
+
+
+
+! MAGMOM  =  6  -6  -6  6  -6  6  6  -6  -6   6  6  -6  6  -6  -6  6  6  -6  -6  6  -6  6  6  -6  6  -6  -6  6  -6   6  6  -6  32*0.5  
+! MAGMOM  =  5  -5    2*0.0
+
+
+! LORBIT=11
+! NEDOS=1601
+
+!   #########
+! BMIX_MAG=0.001
+
+
+LWAVE=   .True.  ! .False.  ! .True.   ! .False.       !.True.
+LCHARG = .True.   ! .False.  ! .True.  !  .False.    ! .True. 
+
+
+
+

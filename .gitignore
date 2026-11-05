@@ -11,3 +11,5 @@ POTCAR
 *.chk
 vasprun.xml
 OUTCAR
+POTCAR*
+potcars/
